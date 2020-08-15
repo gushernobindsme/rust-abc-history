@@ -1,24 +1,31 @@
 use proconio::input;
 
-// TODO AC ならず
 fn main() {
     input! {
-        (mut x, k, d): (i64, u64, u64),
+        (mut x, mut k, d): (i64, i64, i64),
     }
 
-    let mut result = x;
-    for i in 0..k {
-        if (x - d as i64) > 0 {
-            // 座標がプラスになる場合はそのまま移動する
-            x -= d as i64;
-        } else if i == k - 1 {
-            // 最後の手番の場合はなにもしない
-            break;
-        } else {
-            // 座標がマイナスになる場合は引き返す
-            x += d as i64;
-        }
-        result = x;
+    // 座標はマイナスからはじまることもある
+    if x < 0 {
+        x *= -1;
     }
-    println!("{}", result);
+
+    // 最低限、 x/d 分は確実に移動できるはず
+    let min = x / d;
+
+    if min < k {
+        // ターン数が余っている場合
+        x = x - (d * min);
+        k = k - min;
+        if k % 2 == 0 {
+            // 偶数ならば行ったり来たりしてやり過ごせる
+            println!("{}", x.abs());
+        } else {
+            // 奇数ならば一つ進む or 一つ戻る
+            println!("{}", (x - d).abs().min((x + d).abs()));
+        }
+    } else {
+        // ターン数を使い切れる場合
+        println!("{}", x - (d * k));
+    }
 }

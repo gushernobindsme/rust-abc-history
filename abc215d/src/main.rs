@@ -1,39 +1,46 @@
 // -*- coding:utf-8-unix -*-
 
-use num::integer::gcd;
+use primes::PrimeSet;
 use proconio::input;
 use std::collections::HashSet;
 
 fn main() {
     input! {
         n: usize,
-        m: usize,
-        mut a: [usize; n],
+        m: u64,
+        mut a: [u64; n],
     }
+    // 集合 S に 1 〜 m までの全ての整数をいれる
+    let mut s: HashSet<u64> = (1..=m).into_iter().collect();
 
-    // 1 以上 m 以下の整数 k を探索
-    let mut target: HashSet<usize> = (1..m).into_iter().collect();
+    // 既出の素因数
+    // 全体を通して同じ素因数に関して 2 度以上操作を行う必要がないことを利用して、計算量を改善する
+    let mut primes = Vec::new();
+
+    // ai 〜 an を走査する
     for ai in a {
-        let mut gcd_set = HashSet::new();
-        for i in target.clone() {
-            let gcd = gcd(ai, i);
-            if gcd == 1 {
-                gcd_set.insert(i);
+        // ai を素因数分解する。素因数の集合を P とする
+        let mut pset = PrimeSet::new();
+        let p = pset.prime_factors(ai);
+
+        // P に含まれる全ての素因数 k について、「S から k の倍数を全て削除する」という操作を行う
+        for k in p {
+            if primes.contains(&k) {
+                continue;
             }
+            let mut i = 1;
+            while (k * i) <= m {
+                s.remove(&(k * i));
+                i = i + 1;
+            }
+            primes.push(k);
         }
-        // 直積を求める
-        target = target
-            .intersection(&gcd_set)
-            .map(|x| *x)
-            .collect::<HashSet<usize>>();
     }
 
-    // 一行目に整数の数を出力
-    println!("{}", target.len());
-
-    // 続く x 行に答えとなる整数を小さい方から順に一行ずつ出力
-    let mut answers = target.into_iter().collect::<Vec<_>>();
+    // 操作終了後に残った整数が、解である
+    let mut answers = s.into_iter().collect::<Vec<_>>();
     answers.sort();
+    println!("{}", answers.len());
     for answer in answers {
         println!("{}", answer);
     }

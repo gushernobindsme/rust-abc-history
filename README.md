@@ -17,3 +17,4 @@ AtCoder Beginner Contest を Rust で解く
 - [AtCoder Beginner Contest 216 - AtCoder](https://atcoder.jp/contests/abc216)
 - [AtCoder Beginner Contest 217 - AtCoder](https://atcoder.jp/contests/abc217)
 - [サイシードプログラミングコンテスト2021（AtCoder Beginner Contest 219） - AtCoder](https://atcoder.jp/contests/abc219)
+- [エクサウィザーズプログラミングコンテスト2021（AtCoder Beginner Contest 222） - AtCoder](https://atcoder.jp/contests/abc222)
